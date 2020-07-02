@@ -5,8 +5,8 @@
 
 Robot::Robot()
 {
-    Xposition = 200;
-    Yposition = 200;
+    Xposition = 0;
+    Yposition = 0;
 
     diametreRobot = 150;
 }
@@ -14,7 +14,11 @@ Robot::Robot()
 void Robot::addObjectf(double x, double y)
 {
     QPoint _newPoint(x, y);
-    objectif << _newPoint;
+    objectif << _newPoint; 
+
+
+    goToObjectif(objectif.size());
+
 }
 
 void Robot::setPos(double x, double y)
@@ -55,3 +59,55 @@ void Robot::calculLigneLidar(double angle)
 
     }
 }
+
+void Robot::goToObjectif(int number)
+{
+    currentObjectif = number;
+
+    double xdist, ydist;
+
+    xdist = abs(Xposition - objectif[number-1].x());
+    ydist = abs(Yposition - objectif[number-1].y());
+
+    distanceToNextObjectif = sqrt( pow(xdist, 2) + pow(ydist, 2));
+
+    step = distanceToNextObjectif / vitesse_mms;
+
+    if (Xposition > objectif[number-1].x())
+    {
+        stepX = -xdist / step;
+    }
+    else
+    {
+        stepX = xdist / step;
+    }
+
+    if (Yposition > objectif[number-1].y())
+    {
+        stepY = -ydist / step;
+    }
+    else
+    {
+        stepY = ydist / step;
+    }
+
+}
+
+void Robot::newTic()
+{
+    if(!(step == 0))
+    {
+        Xposition += stepX;
+        Yposition += stepY;
+
+        step--;
+    }
+    else
+    {
+        stepX = 0;
+        stepY = 0;
+    }
+
+}
+
+

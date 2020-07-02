@@ -61,11 +61,7 @@ void  Affichage::upObjectif()
         {
             objectif[i]->setRect(_Robot->objectif[i].x() - 15, _Robot->objectif[i].y() - 15, 30, 30);
         }
-        qDebug() << i << " " << _Robot->objectif.size();
     }
-
-
-
 }
 
 void  Affichage::upObstacle()

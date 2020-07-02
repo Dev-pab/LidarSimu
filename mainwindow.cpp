@@ -107,6 +107,9 @@ MainWindow::MainWindow(QWidget *parent)
     MyAffichage->upObstacle();
 
     QTimer::singleShot(500, this, SLOT(ajusterVue()));
+
+    timer = new QTimer();
+    timer->connect(timer, SIGNAL(timeout()),this, SLOT(timerEvent()));
 }
 
 MainWindow::~MainWindow()
@@ -170,8 +173,23 @@ void MainWindow::CoordSouris()
 {
     if (obstacleIhm->isVisible())
     {
-        finLigneIhm.setX(XSouris);
-        finLigneIhm.setY(YSouris);
+        if ( (XSouris>debutLigneIhm.x()-20) && (XSouris<debutLigneIhm.x()+20))
+        {
+            finLigneIhm.setX(debutLigneIhm.x());
+        }
+        else
+        {
+            finLigneIhm.setX(XSouris);
+        }
+        if ( (YSouris>debutLigneIhm.y()-20) && (YSouris<debutLigneIhm.y()+20))
+        {
+            finLigneIhm.setY(debutLigneIhm.y());
+        }
+        else
+        {
+            finLigneIhm.setY(YSouris);
+        }
+
         obstacleIhm->setLine(debutLigneIhm.x(), debutLigneIhm.y() , finLigneIhm.x(), finLigneIhm.y());
     }
 
@@ -203,7 +221,9 @@ void MainWindow::on_spinBox_YRobot_valueChanged(int arg1)
 
 void MainWindow::on_pushButton_tourLidar_clicked()
 {
-    //MyRobot->ScannerTour();
+    QPoint posRobot(MyRobot->Xposition, MyRobot->Yposition);
+    MyRobot->posRobotWhenScan << posRobot;
+
     for (int i=0; i<=360; i +=1)
     {
         //qDebug() << i;
@@ -212,6 +232,7 @@ void MainWindow::on_pushButton_tourLidar_clicked()
         testPoint(i);
     }
     MyAffichage->upLidar();
+    MyRobot->posRobotWhenScanNUM << MyRobot->posRobotWhenScan.size();
 }
 
 void MainWindow::testPoint(int angle)
@@ -240,15 +261,42 @@ void MainWindow::testPoint(int angle)
                     QPoint Lpoint(MyRobot->ligneLidar[0][point], MyRobot->ligneLidar[1][point]);
                     MyRobot->marqueur << Lpoint;
                 }
-
-
                 flagMur = 1;
             }
-
         }
-
         flagMur=0;
     }
 }
 
+void MainWindow::timerEvent()
+{
+    MyRobot->newTic();
+    MyAffichage->upRobot();
+    MyAffichage->upObjectif();
+}
 
+
+void MainWindow::on_pushButton_lecture_clicked()
+{
+    if (!timer->isActive())
+    {
+        timer->start(50);
+    }
+}
+
+void MainWindow::on_pushButton_pause_clicked()
+{
+    if (timer->isActive())
+    {
+        timer->stop();
+    }
+}
+
+void MainWindow::on_horizontalSlider_temps_valueChanged(int value)
+{
+    double delais = 50.00;
+    delais = delais * (200 - value) / 100;
+    timer->setInterval((int)delais);
+
+    ui->spinBox_temps->setValue(value);
+}

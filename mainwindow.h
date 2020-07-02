@@ -28,7 +28,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
+    QTimer *timer;
 
     void leftClick();
     void rightClick();
@@ -58,6 +58,10 @@ public:
 
     Ui::MainWindow *ui;
 
+public slots:
+
+    void timerEvent();
+
 private slots:
 
     void ajusterVue();
@@ -67,6 +71,9 @@ private slots:
     void on_spinBox_YRobot_valueChanged(int arg1);
     void on_pushButton_tourLidar_clicked();
     void on_checkBox_Obstacle_stateChanged(int arg1);
+    void on_pushButton_lecture_clicked();
+    void on_pushButton_pause_clicked();
+    void on_horizontalSlider_temps_valueChanged(int value);
 };
 
 extern MainWindow* ptW;

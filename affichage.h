@@ -49,9 +49,12 @@ private:
 
     QGraphicsEllipseItem *Robot_body;
     QGraphicsRectItem *Playfield;
+    QGraphicsLineItem *RobotTravel;
 
+    QVector<QGraphicsEllipseItem*> marqueurObstacle;
     QVector<QGraphicsEllipseItem*> objectif;
     QVector<QGraphicsLineItem*> obstacle;
+
 
     QVector<QGraphicsLineItem*> LignePoint1;
     QVector<QGraphicsLineItem*> LignePoint2;

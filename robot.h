@@ -11,6 +11,7 @@ public:
     Robot();
 
     int rayonLidar_mm = 1500;
+    double vitesse_mms = 20;
 
     double Xposition;
     double Yposition;
@@ -19,7 +20,15 @@ public:
 
     double diametreRobot;
 
+    int currentObjectif=0;
+    double distanceToNextObjectif;
+    double stepX=0;
+    double stepY=0;
+    int step=0;
+
     QVector<QPoint> marqueur;
+    QVector<QPoint> posRobotWhenScan;
+    QVector<int> posRobotWhenScanNUM;
     QVector<QPoint> objectif;
 
     int update_number;
@@ -36,6 +45,9 @@ public:
 
     void calculLigneLidar(double angle);
     void ScannerTour();
+    void goToObjectif(int number);
+
+    void newTic();
 };
 
 #endif // ROBOT_H
